@@ -23,30 +23,81 @@
                 return false;
             }
 
-            function visualizzaTutto(){
-                $("#all").show();
-
-                //creare checkbox dinamiche
-                $.get("../PHP/get/getDocenti.php",{}, function(data){
+            function ottieniDocenti(){
+                $.get("../PHP/getDocenti.php",{}, function(data){
                     for(let i = 0; i < data.length; i++){
-                        creaCheckbox(data[i]["nome"]);
+                        creaInput(data[i]["nome"]);
                     }
                 });
             }
 
-            function checkBox(nome){
-                let checkboxDOM = $("<input type='checkbox' name='docenti' value='" + nome + "'>");
+            function creaInput(nome){
+                let inputDOM = $("<input type='number' min='1' max='10' class='docenti' id='" + nome +"'>");
                 let labelDOM = $("<label for='" + nome + "'>" + nome + "</label><br>");
 
-                $("#docenti").append(checkboxDOM);
+                $("#docenti").append(inputDOM);
                 $("#docenti").append(labelDOM);
             }
+
+            function salvaVotazione(){
+                
+                let array = $("input.docenti");
+                let flag = 0;
+                let voti = [];
+
+                array.each(function(){
+                    let stringa = $(this).val();
+                    let num = parseInt($(this).val());
+
+                    if(stringa != ""){
+                        if(num < 0 || num > 11){
+                            alert("il voto deve essere compreso tra 0 e 10");
+                            return false;
+                        }
+                    }
+                    else{
+                        alert("una o più caselle sono vuote");
+                        return false;
+                    }
+
+                    voti.push(num);
+                });
+
+                //se tutto giusto, mette le votazioni nel db
+                $.ajax({
+                    type: "POST",
+                    url: "../PHP/salvaVotazione.php",
+                    data: {voti: voti},
+                    success: function(response){
+                        if(response == "200"){
+                            alert("voti inseriti correttamente");
+                            window.location.href="login.html";
+                        }
+                        else{
+                            alert("errore nell'inserire la votazione nel db");
+                        }
+                    }
+                })
+            }
+
+            function visualizzaTutto(){
+                $("#all").show();
+                ottieniDocenti();
+
+                $("#vota").click(function(){
+                    salvaVotazione();
+                });
+
+            }
+
         </script>
     </head>
     <body>
         <div id="all">
+            vota i tuoi docenti (da 1 a 10)<br>
             <div id="docenti">
             </div>
+            <button id="vota">vota</button>
         </div>
     </body>
 </html>
