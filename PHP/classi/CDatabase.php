@@ -16,7 +16,11 @@
 
         public function connessione(){
             $this->mysqli = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
-            $this->mysqli->set_charset("utf8mb4");
+            $this->mysqli->set_charset('utf8mb4');
+        }
+
+        public function getLastID(){
+            return $this->mysqli->insert_id;
         }
 
         public function getTipoParametri(...$params){
@@ -31,8 +35,19 @@
             return $tipoParametri;
         }
 
-        public function inserisci($query, ...$parametri){
+        public function inserisci($query, $tipoParametri, ...$parametri){
+            $stmt = $this->mysqli->prepare($query);
 
+            $stmt->bind_param($tipoParametri, ...$parametri);
+
+            if($stmt->execute()){
+                $stmt->close();
+                return true;
+            }
+            else{
+                $stmt->close();
+                return false;
+            }
         }
 
         public function seleziona($query, ...$parametri){
@@ -51,12 +66,64 @@
                 while($row = $result->fetch_assoc()){
                     $rows[] = $row;
                 }
-
+    
                 $stmt->close();
                 return $rows;
             }
             else{
                 return "errore";
             }
+        }
+
+        public function elimina($query, $tipoParametri, ...$parametri){
+            $stmt = $this->mysqli->prepare($query);
+
+            $stmt->bind_param($tipoParametri, ...$parametri);
+
+            if($stmt->execute()){
+                $stmt->close();
+                return true;
+            }
+            else{
+                $stmt->close();
+                return false;
+            }
+        }
+
+        public function aggiorna($query, $tipoParametri, ...$parametri){
+            $stmt = $this->mysqli->prepare($query);
+            
+            $stmt->bind_param($tipoParametri, ...$parametri);
+
+            if($stmt->execute()){
+                $stmt->close();
+                return true;
+            }
+            else{
+                $stmt->close();
+                return false;
+            }
+        }
+
+        public function cercaSingoloRecord($query, $tipoParametri, ...$parametri){
+            $risultato = $this->seleziona($query, $tipoParametri, ...$parametri);
+
+            if($risultato != "errore"){
+                $variabile = $risultato[0];
+    
+                foreach($variabile as $temp){
+                    $variabile = $temp;
+                    break;
+                }
+    
+                return $variabile;
+            }
+            else{
+                return "errore";
+            }
+        }
+
+        public function chiudiConnessione(){
+            $this->mysqli->close();
         }
     }

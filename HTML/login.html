@@ -15,16 +15,22 @@
                 $.ajax({
                     type: "POST",
                     url: "../PHP/login.php",
-                    data: {user: user, psw: psw},
+                    data: {username: user, password: psw},
                     success: function(response){
                         if(response == "200"){
                             window.location.href = "votazioni.html";
                         }
+                        else if(response == "400"){
+                            alert("lo studente ha già votato");
+                        }
+                        else if(response == "admin"){
+                            window.location.href = "paginaAdmin.html";
+                        }
                         else{
-                            alert("utente non trovato");
+                            alert("errore da qualche parte");
                         }
                     }
-                })
+                });
             }
         </script>
     </head>

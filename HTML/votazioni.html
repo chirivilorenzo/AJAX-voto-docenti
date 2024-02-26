@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script>
+            $("document").ready(function(){
+                $("#all").hide();
+                controllaAutenticato();
+            });
+
+            function controllaAutenticato(){
+                $.ajax({
+                    type: "POST",
+                    url: "../PHP/checkLoggato.php",
+                    success: function(response){
+                        if(response == "200"){
+                            visualizzaTutto();
+                        }
+                        else{
+                            alert("non hai l'autorizzazione");
+                        }
+                    }
+                });
+                return false;
+            }
+
+            function visualizzaTutto(){
+                $("#all").show();
+
+                //creare checkbox dinamiche
+                $.get("../PHP/get/getDocenti.php",{}, function(data){
+                    for(let i = 0; i < data.length; i++){
+                        creaCheckbox(data[i]["nome"]);
+                    }
+                });
+            }
+
+            function checkBox(nome){
+                let checkboxDOM = $("<input type='checkbox' name='docenti' value='" + nome + "'>");
+                let labelDOM = $("<label for='" + nome + "'>" + nome + "</label><br>");
+
+                $("#docenti").append(checkboxDOM);
+                $("#docenti").append(labelDOM);
+            }
+        </script>
+    </head>
+    <body>
+        <div id="all">
+            <div id="docenti">
+            </div>
+        </div>
+    </body>
+</html>
