@@ -35,8 +35,10 @@
             return $tipoParametri;
         }
 
-        public function inserisci($query, $tipoParametri, ...$parametri){
+        public function inserisci($query, ...$parametri){
             $stmt = $this->mysqli->prepare($query);
+
+            $tipoParametri = $this->getTipoParametri(...$parametri);
 
             $stmt->bind_param($tipoParametri, ...$parametri);
 
@@ -75,8 +77,10 @@
             }
         }
 
-        public function elimina($query, $tipoParametri, ...$parametri){
+        public function elimina($query, ...$parametri){
             $stmt = $this->mysqli->prepare($query);
+
+            $tipoParametri = $this->getTipoParametri(...$parametri);
 
             $stmt->bind_param($tipoParametri, ...$parametri);
 
@@ -90,8 +94,10 @@
             }
         }
 
-        public function aggiorna($query, $tipoParametri, ...$parametri){
+        public function aggiorna($query, ...$parametri){
             $stmt = $this->mysqli->prepare($query);
+
+            $tipoParametri = $this->getTipoParametri(...$parametri);
             
             $stmt->bind_param($tipoParametri, ...$parametri);
 
@@ -105,7 +111,10 @@
             }
         }
 
-        public function cercaSingoloRecord($query, $tipoParametri, ...$parametri){
+        public function cercaSingoloRecord($query, ...$parametri){
+
+            $tipoParametri = $this->getTipoParametri(...$parametri);
+
             $risultato = $this->seleziona($query, $tipoParametri, ...$parametri);
 
             if($risultato != "errore"){

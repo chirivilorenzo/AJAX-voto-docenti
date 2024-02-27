@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 26, 2024 alle 20:07
--- Versione del server: 10.4.28-MariaDB
--- Versione PHP: 8.0.28
+-- Creato il: Feb 27, 2024 alle 08:57
+-- Versione del server: 10.4.32-MariaDB
+-- Versione PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -85,6 +85,28 @@ CREATE TABLE `utente` (
 INSERT INTO `utente` (`ID`, `username`, `password`, `admin`, `votato`, `nomeClasse`) VALUES
 (1, 'mario', '2bf65275cb7f5dc95febd7d46cd7d0af', 0, 0, '5b inf');
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `voti`
+--
+
+CREATE TABLE `voti` (
+  `ID` int(11) NOT NULL,
+  `voto` int(2) NOT NULL,
+  `idDocente` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dump dei dati per la tabella `voti`
+--
+
+INSERT INTO `voti` (`ID`, `voto`, `idDocente`) VALUES
+(9, 4, 1),
+(10, 9, 2),
+(11, 8, 3),
+(12, 5, 4);
+
 --
 -- Indici per le tabelle scaricate
 --
@@ -112,6 +134,13 @@ ALTER TABLE `utente`
   ADD KEY `classe` (`nomeClasse`);
 
 --
+-- Indici per le tabelle `voti`
+--
+ALTER TABLE `voti`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `idDocente` (`idDocente`);
+
+--
 -- AUTO_INCREMENT per le tabelle scaricate
 --
 
@@ -134,6 +163,12 @@ ALTER TABLE `utente`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT per la tabella `voti`
+--
+ALTER TABLE `voti`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- Limiti per le tabelle scaricate
 --
 
@@ -148,6 +183,12 @@ ALTER TABLE `docenti`
 --
 ALTER TABLE `utente`
   ADD CONSTRAINT `utente_ibfk_1` FOREIGN KEY (`nomeClasse`) REFERENCES `classi` (`nome`);
+
+--
+-- Limiti per la tabella `voti`
+--
+ALTER TABLE `voti`
+  ADD CONSTRAINT `voti_ibfk_1` FOREIGN KEY (`idDocente`) REFERENCES `docenti` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

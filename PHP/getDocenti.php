@@ -5,6 +5,8 @@
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
 
+        //DEVE RITORNARE SOLO I DOCENTI CHE APPARTENGONO ALLA CLASSE DELLO STUDENTE INTERESSATO
+
         $classeDB = new CDatabase();
         $classeDB->connessione();
 

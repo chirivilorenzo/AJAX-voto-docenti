@@ -43,9 +43,10 @@
                 
                 let array = $("input.docenti");
                 let flag = 0;
-                let voti = [];
+                let voti = {};
 
                 array.each(function(){
+                    let nomeDocente = $(this).attr("id");
                     let stringa = $(this).val();
                     let num = parseInt($(this).val());
 
@@ -60,14 +61,14 @@
                         return false;
                     }
 
-                    voti.push(num);
+                    voti[nomeDocente] = num;
                 });
 
                 //se tutto giusto, mette le votazioni nel db
                 $.ajax({
                     type: "POST",
                     url: "../PHP/salvaVotazione.php",
-                    data: {voti: voti},
+                    data: {voti: JSON.stringify(voti)},
                     success: function(response){
                         if(response == "200"){
                             alert("voti inseriti correttamente");
