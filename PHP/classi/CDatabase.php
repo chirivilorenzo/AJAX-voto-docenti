@@ -64,13 +64,18 @@
             if($stmt->execute()){
                 $result = $stmt->get_result();
 
-                $rows = array();
-                while($row = $result->fetch_assoc()){
-                    $rows[] = $row;
-                }
+                if($result->num_rows > 0){
+                    $rows = array();
+                    while($row = $result->fetch_assoc()){
+                        $rows[] = $row;
+                    }
     
-                $stmt->close();
-                return $rows;
+                    $stmt->close();
+                    return $rows;
+                }
+                else{
+                    return "vuoto";
+                }
             }
             else{
                 return "errore";

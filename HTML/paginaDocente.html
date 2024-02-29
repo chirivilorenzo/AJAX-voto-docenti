@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script>
+            $("document").ready(function(response){
+                $("#all").hide();
+                controllaAutenticato();
+            });
+
+            function controllaAutenticato(){
+                $.ajax({
+                    type: "POST",
+                    url: "../PHP/checkLoggato.php",
+                    success: function(response){
+                        if(response == "docente"){
+                            visualizzaTutto();
+                        }
+                        else{
+                            let paragrafoDOM = "<p>non hai l'autorizzazione per accedere a questa pagina</p>";
+                            $("body").append(paragrafoDOM);
+                        }
+                    }
+                });
+            }
+
+            function visualizzaVoti(voto){
+                let paragrafoDOM = "<p>voto: " + voto + "</p>";
+
+                $("#all").prepend(paragrafoDOM);
+            }
+
+            function getVoti(){
+                $.get("../PHP/getVoti.php", {}, function(data){
+                    for(let i = 0; i < data.length; i++){
+                        visualizzaVoti(data[i]["voto"]);
+                    }
+                });
+            }
+
+            function visualizzaTutto(){
+                $("#all").show();
+                getVoti();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="all">
+            <br><a href="../PHP/logout.php">logout</a>
+        </div>
+    </body>
+</html>

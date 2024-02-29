@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 27, 2024 alle 08:57
--- Versione del server: 10.4.32-MariaDB
--- Versione PHP: 8.2.12
+-- Creato il: Feb 29, 2024 alle 19:40
+-- Versione del server: 10.4.28-MariaDB
+-- Versione PHP: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -39,7 +39,8 @@ CREATE TABLE `classi` (
 INSERT INTO `classi` (`ID`, `nome`) VALUES
 (3, '3b inf'),
 (2, '4b inf'),
-(1, '5b inf');
+(1, '5b inf'),
+(4, 'admin');
 
 -- --------------------------------------------------------
 
@@ -50,6 +51,7 @@ INSERT INTO `classi` (`ID`, `nome`) VALUES
 CREATE TABLE `docenti` (
   `ID` int(11) NOT NULL,
   `nome` varchar(32) NOT NULL,
+  `password` varchar(32) NOT NULL,
   `nomeClasse` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -57,11 +59,12 @@ CREATE TABLE `docenti` (
 -- Dump dei dati per la tabella `docenti`
 --
 
-INSERT INTO `docenti` (`ID`, `nome`, `nomeClasse`) VALUES
-(1, 'doc1', '5b inf'),
-(2, 'doc2', '5b inf'),
-(3, 'doc3', '4b inf'),
-(4, 'doc4', '3b inf');
+INSERT INTO `docenti` (`ID`, `nome`, `password`, `nomeClasse`) VALUES
+(1, 'doc1', '', '5b inf'),
+(2, 'doc2', '', '5b inf'),
+(3, 'doc3', '', '4b inf'),
+(4, 'doc4', '', '3b inf'),
+(5, 'luca', '454b9413cb32df4be8f87a1c1eb504e1', '5b inf');
 
 -- --------------------------------------------------------
 
@@ -83,7 +86,9 @@ CREATE TABLE `utente` (
 --
 
 INSERT INTO `utente` (`ID`, `username`, `password`, `admin`, `votato`, `nomeClasse`) VALUES
-(1, 'mario', '2bf65275cb7f5dc95febd7d46cd7d0af', 0, 0, '5b inf');
+(1, 'mario', '2bf65275cb7f5dc95febd7d46cd7d0af', 0, 0, '5b inf'),
+(3, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 0, 'admin'),
+(5, 'luca', 'b59f8f3854abf10b87093d912a936377', 0, 0, '3b inf');
 
 -- --------------------------------------------------------
 
@@ -105,7 +110,9 @@ INSERT INTO `voti` (`ID`, `voto`, `idDocente`) VALUES
 (9, 4, 1),
 (10, 9, 2),
 (11, 8, 3),
-(12, 5, 4);
+(12, 5, 4),
+(19, 7, 5),
+(20, 8, 5);
 
 --
 -- Indici per le tabelle scaricate
@@ -148,25 +155,25 @@ ALTER TABLE `voti`
 -- AUTO_INCREMENT per la tabella `classi`
 --
 ALTER TABLE `classi`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `docenti`
 --
 ALTER TABLE `docenti`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT per la tabella `utente`
 --
 ALTER TABLE `utente`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT per la tabella `voti`
 --
 ALTER TABLE `voti`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Limiti per le tabelle scaricate

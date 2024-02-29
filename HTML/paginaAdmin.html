@@ -1,0 +1,124 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script>
+            $("document").ready(function(){
+                $("#all").hide();
+                controllaAutenticato();
+
+                $("#salvaStudente").click(function(){
+                    aggiungiStudente();
+                });
+
+                $("#salvaDocente").click(function(){
+                    aggiungiDocente();
+                });
+            });
+
+
+
+            function controllaAutenticato(){
+                $.ajax({
+                    type: "POST",
+                    url: "../PHP/checkLoggato.php",
+                    success: function(response){
+                        if(response == "admin"){
+                            visualizzaTutto();
+                        }
+                        else{
+                            let paragrafoDOM = "<p>non hai l'autorizzazione per accedere a questa pagina</p>";
+                            $("body").append(paragrafoDOM);
+                        }
+                    }
+                });
+            }
+
+            function aggiungiSelect(selectStudenti, selectDocenti){
+                selectStudenti += "</select>";
+                selectDocenti += "</select>";
+
+                $("#div-classiStu").append(selectStudenti);
+                $("#div-classiDoc").append(selectDocenti);
+            }
+
+            function getClassi(){
+                let selectStudentiDOM = "<select id='classiStudenti'>";
+                let selectDocentiDOM = "<select id='classiDocenti'>";
+
+                $.get("../PHP/getClassi.php", {}, function(data){
+                    for(let i = 0; i < data.length; i++){
+                        if(data[i]["nome"] != "admin"){
+                            selectStudentiDOM += "<option value='" + data[i]["nome"] + "'>" + data[i]["nome"] + "</option>";
+                            selectDocentiDOM += "<option value='" + data[i]["nome"] + "'>" + data[i]["nome"] + "</option>";
+                        }
+                    }
+
+                    aggiungiSelect(selectStudentiDOM, selectDocentiDOM);
+                });
+            }
+
+            function visualizzaTutto(){
+                $("#all").show();
+                getClassi();
+            }
+
+            function aggiungiStudente(){
+                let username = $("#userStudente").val();
+                let password = $("#pswStudente").val();
+                let classe = $("#classiStudenti").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "../PHP/addStudente.php",
+                    data: {user: username, psw: password, classe: classe},
+                    success: function(response){
+                        if(response == "200"){
+                            alert("studente inserito correttamente");
+                        }
+                        else{
+                            alert("errore nell'inserimento dello studente");
+                        }
+                    }
+                })
+            }
+
+            function aggiungiDocente(){
+                let username = $("#userDocente").val();
+                let password = $("#pswDocente").val();
+                let classe = $("#classiDocenti").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "../PHP/addDocente.php",
+                    data: {user: username, psw: password, classe: classe},
+                    success: function(response){
+                        if(response == "200"){
+                            alert("docente inserito correttamente");
+                        }
+                        else{
+                            alert("errore nell'inserimento del docente");
+                        }
+                    }
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <div id="all">
+            creazione studenti e docenti<br><br>
+            add studente:<br>
+            username: <input type="text" id="userStudente"><br>
+            password: <input type="password" id="pswStudente"><br>
+            classe: <div id="div-classiStu"></div><br><br><br>
+
+            add docente:<br>
+            username: <input type="text" id="userDocente"><br>
+            password: <input type="password" id="pswDocente"><br>
+            classe: <div id="div-classiDoc"></div><br>
+
+            <button id="salvaStudente">salva studente</button>
+            <button id="salvaDocente">salva docente</button><br><br>
+            <a href="../PHP/logout.php">Logout</a>
+        </div>
+    </body>
+</html>
